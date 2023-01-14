@@ -13,7 +13,7 @@ A simple pokedex made with jetpack compose,
 
 ## Pull Request
 
-- If you want to help for add new API or other, you are welcome ;)
+- If you want to help you are welcome ;)
 
 ## Crypto Tips
 
