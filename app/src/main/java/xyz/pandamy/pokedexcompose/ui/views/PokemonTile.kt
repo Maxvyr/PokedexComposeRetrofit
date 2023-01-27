@@ -1,8 +1,9 @@
 package xyz.pandamy.pokedexcompose.ui.views
 
 
-import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -14,10 +15,14 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import xyz.pandamy.pokedexcompose.R
 import xyz.pandamy.pokedexcompose.models.PokemonBase
+import java.util.*
 
 
 @Composable
 fun PokemonTile(pokemon: PokemonBase, list: List<PokemonBase>) {
+    var name = pokemon.name.replaceFirstChar {
+        if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+    }
     var position = ""
     for (pok in list) {
         if(pok.name == pokemon.name) {
@@ -30,28 +35,34 @@ fun PokemonTile(pokemon: PokemonBase, list: List<PokemonBase>) {
         }
     }
 
-
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
+    Card(
+        elevation = 8.dp,
+        shape = MaterialTheme.shapes.large,
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(20.dp)
-//            .clickable {
-//                onClick(pokemon)
-//            }
-    ) {
-        Text(text = pokemon.name)
-        AsyncImage(
-            model = "https://assets.pokemon.com/assets/cms2/img/pokedex/full/${position}.png",
-            contentDescription = "image de ${pokemon.name}",
-            contentScale = ContentScale.Crop,
+            .padding(10.dp)
+            .clickable {
+    //          onClick(pokemon)
+                println(pokemon)
+            }) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
-                .width(150.dp)
-                .height(150.dp)
-                .padding(8.dp)
-                .clip(MaterialTheme.shapes.large),
-            placeholder = painterResource(id = R.drawable.ic_launcher_foreground), //temporary
-        )
+                .fillMaxWidth()
+                .padding(20.dp)
+        ) {
+            Text(text = name, style = MaterialTheme.typography.h4)
+            AsyncImage(
+                model = "https://assets.pokemon.com/assets/cms2/img/pokedex/full/${position}.png",
+                contentDescription = "image de $name",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .width(120.dp)
+                    .height(120.dp)
+                    .padding(8.dp)
+                    .clip(MaterialTheme.shapes.large),
+                placeholder = painterResource(id = R.drawable.ic_launcher_foreground), //temporary
+            )
+        }
     }
 }
