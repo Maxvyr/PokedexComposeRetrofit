@@ -63,8 +63,8 @@ dependencies {
 
     //dwld image
     implementation "io.coil-kt:coil-compose:2.2.2"
-    //use json -> gson
-    implementation "com.google.code.gson:gson:2.10.1"
+    //use json -> moshi
+    implementation "com.squareup.moshi:moshi-kotlin:1.12.0"
     //view model
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1"
     //retrofit for http request

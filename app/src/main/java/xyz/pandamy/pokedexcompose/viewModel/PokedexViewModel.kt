@@ -6,8 +6,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import xyz.pandamy.pokedexcompose.dataServices.PokedexAPI
@@ -23,7 +24,7 @@ class PokedexViewModel : ViewModel() {
         viewModelScope.launch {
             pokemonlistState = try {
                 val res = PokedexAPI.service.getPokemonList()
-                PokedexUiState.SUCCESS(list = jsonToItem(res))
+                PokedexUiState.SUCCESS(list = jsonToItem(res)!!)
             } catch (io: IOException) {
                 println("IOException ->${io.message}")
                 PokedexUiState.ERROR(io.message?:"")
@@ -37,9 +38,16 @@ class PokedexViewModel : ViewModel() {
         }
     }
 
-    fun jsonToItem(json: String) : PokemonList {
-        val gson = Gson()
-        val type = object : TypeToken<PokemonList>() {}.type
-        return  gson.fromJson(json,type)
+    fun jsonToItem(json: String) : PokemonList? {
+//        val moshi = Moshi.Builder().build()
+//        val adapter = moshi.adapter(PokemonList::class.java)
+//        return adapter.fromJson(json)
+        val moshi: Moshi = Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
+        val jsonAdapter: JsonAdapter<PokemonList> = moshi.adapter(PokemonList::class.java)
+
+        val pokemonList = jsonAdapter.fromJson(json)
+        return  pokemonList
     }
 }
